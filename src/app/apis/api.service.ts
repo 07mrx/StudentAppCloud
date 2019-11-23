@@ -10,7 +10,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 
 export class ApiService {
 
-  endpoint: string = 'http://localhost:4000/api';
+  endpoint: string = 'https://18tx0hssv5.execute-api.us-east-1.amazonaws.com/dev';
   headers = new HttpHeaders().set('Content-Type', 'application/json');
 
   constructor(private http: HttpClient) { }
@@ -18,6 +18,7 @@ export class ApiService {
   // Add student
   AddStudent(data: Student): Observable<any> {
     let API_URL = `${this.endpoint}/add-student`;
+
     return this.http.post(API_URL, data)
       .pipe(
         catchError(this.errorMgmt)
@@ -26,7 +27,7 @@ export class ApiService {
 
   // Get all students
   GetStudents() {
-    return this.http.get(`${this.endpoint}`);
+    return this.http.get(`${this.endpoint}/student-list`);
   }
 
   // Get student
@@ -45,7 +46,7 @@ export class ApiService {
     let API_URL = `${this.endpoint}/update-student/${id}`;
     return this.http.put(API_URL, data, { headers: this.headers }).pipe(
       catchError(this.errorMgmt)
-    )
+    );
   }
 
   // Delete student
@@ -53,7 +54,7 @@ export class ApiService {
     var API_URL = `${this.endpoint}/delete-student/${id}`;
     return this.http.delete(API_URL).pipe(
       catchError(this.errorMgmt)
-    )
+    );
   }
 
   // Error handling

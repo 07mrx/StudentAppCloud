@@ -1,11 +1,15 @@
 import uuid from "uuid";
 import AWS from "aws-sdk";
+import { success, failure} from "./libs/response-lib";
+import * as dynamoDbLib from "./libs/dynamodb-lib";
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-export function main(event, context, callback) {
+export async function main(event, context) {
   // Request body is passed in as a JSON encoded string in 'event.body'
-  const data = JSON.parse(event.body);
+  console.log(event);
+  let data = event;
+  if(data.constructor.name === "String") { data = JSON.parse(data); }
 
   const params = {
     TableName: process.env.tableName,
@@ -19,10 +23,13 @@ export function main(event, context, callback) {
     }
   };
 
+  console.log(params);
+
   try {
     await dynamoDbLib.call("put", params);
     return success(params.Item);
   } catch (e) {
+    console.log(e);
     return failure({ status: false });
   }
 }

@@ -1,4 +1,4 @@
-service: notes-app-api
+service: student-app-api
 
 # Create an optimized package for our functions
 package:
@@ -9,20 +9,40 @@ plugins:
   - serverless-offline
   - serverless-dotenv-plugin # Load .env as environment variables
 
+custom:
+  # Our stage is based on what is passed in when running serverless
+  # commands. Or fallsback to what we have set in the provider section.
+  stage: ${opt:stage, self:provider.stage}
+  # Set the table name here so we can use it while testing locally
+  tableName: ${self:custom.stage}-students
+
 provider:
   name: aws
   runtime: nodejs10.x
-  stage: prod
+  stage: dev
   region: us-east-1
 
   # These environment variables are made available to our functions
   # under process.env.
   environment:
-    tableName: notes
+    tableName: ${self:custom.tableName}
 
   # 'iamRoleStatements' defines the permission policy for the Lambda function.
   # In this case Lambda functions are granted with permissions to access DynamoDB.
   iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+      Resource:
+        - 'Fn::Join':
+          - ':'
+          -
+            - 'arn:aws:logs'
+            - Ref: 'AWS::Region'
+            - Ref: 'AWS::AccountId'
+            - 'log-group:/aws/lambda/*:*:*'
     - Effect: Allow
       Action:
         - dynamodb:DescribeTable
@@ -32,7 +52,10 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:us-east-1:*:*"
+      # Restrict our IAM role permissions to
+      # the specific table for the stage
+      Resource:
+        - "Fn::GetAtt": [ StudentsTable, Arn ]
 
 functions:
   create:
@@ -41,13 +64,15 @@ functions:
       - http:
           path: add-student
           method: post
+          cors: true
 
-  # get:
-  #   handler: get.main
-  #   events:
-  #     - http:
-  #         path: read-student/{_id}
-  #         method: get
+  get:
+    handler: get.main
+    events:
+      - http:
+          path: read-student/{_id}
+          method: get
+          cors:true
 
   list:
     handler: list.main
@@ -55,25 +80,26 @@ functions:
       - http:
           path: student-list
           method: get
+          cors: true
 
   update:
-    # Defines an HTTP API endpoint that calls the main function in update.js
-    # - path: url path is /notes/{id}
-    # - method: PUT request
     handler: update.main
     events:
       - http:
           path: update-student/{_id}
           method: put
+          cors: true
 
   delete:
-    # Defines an HTTP API endpoint that calls the main function in delete.js
-    # - path: url path is /notes/{id}
-    # - method: DELETE request
     handler: delete.main
     events:
       - http:
           path: notes/{id}
           method: delete
           cors: true
-          authorizer: aws_iam
+
+resources:
+  # API Gateway Errors
+  - ${file(resources/api-gateway-errors.yml)}
+  # DynamoDB
+  - ${file(resources/dynamodb-table.yml)}
