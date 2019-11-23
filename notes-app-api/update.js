@@ -10,11 +10,11 @@ export async function main(event, context) {
     },
     // 'UpdateExpression' defines the attributes to be updated
     // 'ExpressionAttributeValues' defines the value in the update expression
-    UpdateExpression: "SET student_name = :student_name, student_email = :student_email, section = :section, subjects = :subjects, dob = :dob, gender = :gender",
+    UpdateExpression: "SET student_name = :student_name, student_email = :student_email, sect = :sect, subjects = :subjects, dob = :dob, gender = :gender",
     ExpressionAttributeValues: {
       ":student_name": data.student_name || null,
       ":student_email": data.student_email || null,
-      ":section": data.section || null,
+      ":sect": data.section || null,
       ":subjects": data.subjects || null,
       ":dob": data.dob || null,
       ":gender": data.gender || null

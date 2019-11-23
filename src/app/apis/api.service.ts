@@ -10,7 +10,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 
 export class ApiService {
 
-  endpoint: string = 'https://18tx0hssv5.execute-api.us-east-1.amazonaws.com/dev';
+  endpoint: string = 'https://tsehcfq3b1.execute-api.us-east-1.amazonaws.com/dev';
   headers = new HttpHeaders().set('Content-Type', 'application/json');
 
   constructor(private http: HttpClient) { }

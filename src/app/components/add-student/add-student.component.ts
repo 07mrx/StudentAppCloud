@@ -56,7 +56,7 @@ export class AddStudentComponent implements OnInit {
     const value = event.value;
     // Add language
     if ((value || '').trim() && this.subjectArray.length < 5) {
-      this.subjectArray.push({ name: value.trim() })
+      this.subjectArray.push({ name: value.trim() });
     }
     // Reset the input value
     if (input) {
@@ -74,7 +74,7 @@ export class AddStudentComponent implements OnInit {
 
   /* Date */
   formatDate(e) {
-    var convertDate = new Date(e.target.value).toISOString().substring(0, 10);
+    const convertDate = new Date(e.target.value).toISOString().substring(0, 10);
     this.studentForm.get('dob').setValue(convertDate, {
       onlyself: true
     });

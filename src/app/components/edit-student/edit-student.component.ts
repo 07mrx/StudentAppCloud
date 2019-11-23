@@ -40,18 +40,18 @@ export class EditStudentComponent implements OnInit {
     private studentApi: ApiService
   ) {
     var id = this.actRoute.snapshot.paramMap.get('id');
+
     this.studentApi.GetStudent(id).subscribe(data => {
-      console.log(data.subjects)
       this.subjectArray = data.subjects;
       this.studentForm = this.fb.group({
         student_name: [data.student_name, [Validators.required]],
         student_email: [data.student_email, [Validators.required]],
-        section: [data.section, [Validators.required]],
+        section: [data.sect, [Validators.required]],
         subjects: [data.subjects],
         dob: [data.dob, [Validators.required]],
         gender: [data.gender]
-      })
-    })
+      });
+    });
   }
 
   /* Reactive book form */
@@ -63,7 +63,7 @@ export class EditStudentComponent implements OnInit {
       subjects: [this.subjectArray],
       dob: ['', [Validators.required]],
       gender: ['Male']
-    })
+    });
   }
 
   /* Add dynamic languages */
@@ -90,10 +90,10 @@ export class EditStudentComponent implements OnInit {
 
   /* Date */
   formatDate(e) {
-    var convertDate = new Date(e.target.value).toISOString().substring(0, 10);
+    const convertDate = new Date(e.target.value).toISOString().substring(0, 10);
     this.studentForm.get('dob').setValue(convertDate, {
       onlyself: true
-    })
+    });
   }
 
   /* Get errors */
@@ -103,11 +103,11 @@ export class EditStudentComponent implements OnInit {
 
   /* Update book */
   updateStudentForm() {
-    console.log(this.studentForm.value)
+    console.log(this.studentForm.value);
     var id = this.actRoute.snapshot.paramMap.get('id');
     if (window.confirm('Are you sure you want to update?')) {
       this.studentApi.UpdateStudent(id, this.studentForm.value).subscribe(res => {
-        this.ngZone.run(() => this.router.navigateByUrl('/students-list'))
+        this.ngZone.run(() => this.router.navigateByUrl('/students-list'));
       });
     }
   }

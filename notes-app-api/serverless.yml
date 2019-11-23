@@ -72,7 +72,7 @@ functions:
       - http:
           path: read-student/{_id}
           method: get
-          cors:true
+          cors: true
 
   list:
     handler: list.main
@@ -94,7 +94,7 @@ functions:
     handler: delete.main
     events:
       - http:
-          path: notes/{id}
+          path: delete-student/{_id}
           method: delete
           cors: true
 

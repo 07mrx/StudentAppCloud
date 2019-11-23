@@ -7,7 +7,6 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 export async function main(event, context) {
   // Request body is passed in as a JSON encoded string in 'event.body'
-  console.log(event);
   let data = event;
   if(data.constructor.name === "String") { data = JSON.parse(data); }
 
@@ -17,13 +16,12 @@ export async function main(event, context) {
       _id: uuid.v1(),
       student_name: data.student_name,
       student_email: data.student_email,
-      section: data.section,
+      sect: data.section,
       subjects: data.subjects,
       dob: data.dob
     }
   };
 
-  console.log(params);
 
   try {
     await dynamoDbLib.call("put", params);
