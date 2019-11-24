@@ -7,7 +7,11 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "deploy-website": "ng build && serverless deploy",
+    "remove-website": "ng build && serverless remove",
+    "deploy-backend": "cd student-api && serverless deploy",
+    "remove-backend": "cd student-api && serverless remove"
   },
   "private": true,
   "dependencies": {
